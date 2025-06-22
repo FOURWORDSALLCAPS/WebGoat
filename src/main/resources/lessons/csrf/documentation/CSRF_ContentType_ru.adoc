@@ -1,0 +1,23 @@
+== CSRF и content-type
+
+В предыдущем разделе мы увидели, что опора на content-type не является защитой от
+CSRF. В этом разделе мы рассмотрим другой способ, которым мы можем выполнить атаку CSRF против
+API, которые не защищены от CSRF.
+
+В этом задании вам нужно добиться POST следующего сообщения JSON на наши конечные точки:
+
+[source]
+----
+POST /csrf/feedback/message HTTP/1.1
+
+{
+  "name"    : "WebGoat",
+  "email"   : "webgoat@webgoat.org",
+  "content" : "WebGoat is the best!!"
+}
+----
+
+Более подробную информацию можно найти http://pentestmonkey.net/blog/csrf-xml-post-request[тут]
+
+Помните, что вам нужно сделать звонок из другого источника (WebWolf может помочь здесь), и вам нужно войти в
+WebGoat.

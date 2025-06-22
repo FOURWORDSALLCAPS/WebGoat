@@ -1,0 +1,32 @@
+== Влияние CSRF
+
+Влияние ограничено только тем, что может сделать вошедший в систему пользователь (если сайт/функция/действие не защищены должным образом).
+Области, которые действительно подвержены атакам CSRF, — это устройства IoT и «умные» приборы. К сожалению, многие маршрутизаторы потребительского уровня
+также оказались уязвимыми для CSRF.
+
+== Решения CSRF
+
+=== Атрибут cookie одного сайта
+
+Это новое расширение, поддерживаемое современными браузерами, которое ограничивает область действия cookie таким образом, что оно будет
+прикреплено только к запросам, если эти запросы являются «одним и тем же сайтом»
+Например, запросы на `http://webgoat.org/something` прикрепит файлы cookie того же сайта, если запрос инициирован с
+`webgoat.org`.
+Есть два режима: строгий и нестрогий. Первый не допускает кросс-сайтовый запрос, это означает, что когда вы находитесь на
+github.com и хотите поставить отметку «Нравится» через Facebook (а Facebook определяет same-site как строгий), вы будете
+перенаправлены на страницу входа, поскольку браузер не прикрепляет cookie для Facebook.
+Дополнительную информацию можно найти здесь: https://www.sjoerdlangkemper.nl/2016/04/14/preventing-csrf-with-samesite-cookie-attribute/
+
+=== Другие средства защиты
+
+К счастью, многие (веб) фреймворки приложений теперь имеют встроенную поддержку для обработки атак CSRF. Например, Spring и
+Tomcat имеют эту функцию по умолчанию. Пока вы ее не отключите (как в WebGoat), вы должны быть защищены от атак CSRF.
+
+Дополнительную информацию о защите от CSRF см. ниже:
+https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html (Prevention/Defense)
+
+https://owasp.org/www-community/attacks/csrf  (Attack)
+
+https://tomcat.apache.org/tomcat-7.0-doc/config/filter.html#CSRF_Prevention_Filter / https://tomcat.apache.org/tomcat-8.0-doc/config/filter.html#CSRF_Prevention_Filter (Tomcat)
+
+https://docs.spring.io/spring-security/site/docs/current/reference/html5/#csrf
