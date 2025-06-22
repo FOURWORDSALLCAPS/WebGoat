@@ -25,7 +25,7 @@
 				<div id="lessonContent">
 					<form accept-charset="UNKNOWN" method="POST" name="form"
 						th:action="@{/#attack/307/100}">
-						<span th:text="#{http-basics.EnterYourName}">Enter your name:</span> <input name="person" value="" type="TEXT"/><input
+						Enter your name: <input name="person" value="" type="TEXT"/><input
 							name="SUBMIT" th:value="#{http-basics.Go!}" type="SUBMIT" class="spacing"/>
 					</form>
 				</div>
@@ -64,12 +64,12 @@
 					<input type="hidden" name="magic_num" id="magic_num" value="foo" />
 					<table>
 						<tr>
-							<td><span th:text="#{http-basics.protocol}">Is this form sending a POST or a GET:</span></td>
+							<td>Is this form sending a POST or a GET:</td>
 							<td><input name="answer" value="" type="TEXT" /></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td><span th:text="#{http-basics.magic.number}">What is the magic number:</span></td>
+							<td>What is the magic number:</td>
 							<td><input name="magic_answer" value="" type="TEXT" /><input
 								name="SUBMIT" value="Go!" type="SUBMIT" class="spacing" /></td>
 							<td></td>
