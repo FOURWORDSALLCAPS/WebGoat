@@ -1,0 +1,27 @@
+= Основы криптографии
+
+== Концепция
+
+В этом уроке объясняются различные типы методов криптографии, которые обычно используются в веб-приложениях.
+
+== Цели
+
+Цель — ознакомиться со следующими формами техник:
+
+* link:start.mvc#lesson/Cryptography.lesson/1[Кодирование]
+
+* link:start.mvc#lesson/Cryptography.lesson/3[Хеширование]
+
+* link:start.mvc#lesson/Cryptography.lesson/4[Шифрование]
+
+* link:start.mvc#lesson/Cryptography.lesson/5[Подписание]
+
+* link:start.mvc#lesson/Cryptography.lesson/6[Хранилища ключей]
+
+* link:start.mvc#lesson/Cryptography.lesson/7[Настройки безопасности по умолчанию]
+
+* link:start.mvc#lesson/Cryptography.lesson/8[Постквантовая криптография]
+
+=== Задания
+
+После объяснения элемента будет несколько заданий.
