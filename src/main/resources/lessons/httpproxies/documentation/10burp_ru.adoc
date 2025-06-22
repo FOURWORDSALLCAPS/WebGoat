@@ -1,0 +1,38 @@
+=== Burp прокси
+
+Другой прокси, который вы можете использовать, — это Burp. Одно из упражнений в WebGoat можно решить только с помощью Burp, но пока не с помощью OWAP ZAP.
+Burp можно настроить только вручную. Пожалуйста, следуйте описанным шагам link:start.mvc#lesson/HttpProxies.lesson/8[тут] first.
+Вы можете загрузить версию сообщества Burp как https://portswigger.net/burp/communitydownload[plain jar file,window=_blank]
+
+[source]
+----
+java -jar burpsuite_community_v2.1.04.jar
+----
+
+Выберите `tempary project`, а затем `use burp defaults`.
+
+Перейдите к параметрам прокси и измените его на использование порта 8090
+
+image::images/burpproxy.png[Burp proxy options,style="lesson-image"]
+
+На этой странице вы также можете экспортировать сертификат Burp и импортировать его в свой браузер. Аналогично инструкциям на предыдущих страницах.
+
+Перейдите на страницу перехвата прокси и щелкните переключатель, чтобы перехват был выключен. (По умолчанию и на рисунке ниже он включен)
+
+image::images/burpintercept.png[Burp intercept,style="lesson-image"]
+
+Затем запустите браузер, подключенный к прокси-серверу, и начните использовать WebGoat.
+Теперь настройте параметр запроса перехвата, расширив правило того, что не следует перехватывать:
+
+image::images/burpfilterclient.png[Burp client request filter,style="lesson-image"]
+
+Используйте, например: (\^mvc$|^txt$|\^woff$|^lesson$|\^gif$|^jpg$|\^png$|^css$|\^js$|^ico$)
+Затем включите перехват, нажав на ранее упомянутый переключатель.
+
+Перехват будет выглядеть так:
+
+image::images/burpintercepted.png[Burp client request filter,style="lesson-image"]
+
+Наконец, вы можете просмотреть историю и добавить фильтры для истории и запросов на воспроизведение с этого экрана:
+
+image::images/burpfilter.png[Burp history,style="lesson-image"]

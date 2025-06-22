@@ -1,0 +1,23 @@
+==== Фильтрация запросов на панели истории
+
+В главном окне ZAP нажмите «Фильтр»; см. изображение ниже.
+
+image::images/zap-exclude.png[Exclude internal APIs from WebGoat,style="lesson-image"]
+
+{nbsp} +
+
+Затем в поле `URL Inc Regex` введите:
+
+[source]
+----
+.*WebGoat.*
+----
+
+И в поле `URL Exc Regex` введите:
+
+[source]
+----
+.*lesson.*.mvc.*
+----
+
+Нажмите «Применить», чтобы закрыть окно, и ZAP больше не будет отображать внутренние запросы WebGoat.
