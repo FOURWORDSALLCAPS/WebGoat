@@ -1,0 +1,11 @@
+== Собственный XSS или отраженный XSS?
+
+Вы должны были выполнить скрипт с последним примером. На данный момент он считается «самостоятельным XSS».
+
+Почему так?
+
+Это потому, что ни одна ссылка не запускает этот XSS.
+
+Вы можете попробовать сами, чтобы увидеть, что произойдет ... перейдите по ссылке:
+
+link:CrossSiteScripting/attack5a?QTY1=1&QTY2=1&QTY3=1&QTY4=1&field1=<script>alert('my%20javascript%20here')</script>4128+3214+0002+1999&field2=111["CrossSiteScripting/attack5a?QTY1=1&QTY2=1&QTY3=1&QTY4=1&field1=<script>alert('my%20javascript%20here')</script>4128+3214+0002+1999&field2=111",window=_blank]

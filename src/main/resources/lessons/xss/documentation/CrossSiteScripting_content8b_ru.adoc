@@ -1,0 +1,64 @@
+== Reflective XSS
+
+См. файл HTML ниже, который передает данные в файл JSP.
+
+[source,html]
+-------------------------------------------------------
+<html>
+   <body>
+      <form action = "main.jsp" method = "POST">
+         First Name: <input type = "text" name = "first_name">
+         <br />
+         Last Name: <input type = "text" name = "last_name" />
+         <input type = "submit" value = "Submit" />
+      </form>
+   </body>
+</html>
+-------------------------------------------------------
+
+Вот файл JSP:
+
+[source,html]
+-------------------------------------------------------
+<html>
+
+<head>
+    <title>Using GET and POST Method to Read Form Data</title>
+</head>
+
+<body>
+    <h1>Using POST Method to Read Form Data</h1>
+    <table>
+        <tbody>
+            <tr>
+                <td><b>First Name:</b></td>
+                <td><%= request.getParameter("first_name")%></td>
+            </tr>
+            <tr>
+                <td><b>Last Name:</b></td>
+                <td>
+                    <%= request.getParameter("last_name")%>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
+-------------------------------------------------------
+
+Как вы видите, файл JSP выводит неотфильтрованный пользовательский ввод, что никогда не является хорошей идеей.
+Вы хотите, чтобы люди получали доступ к странице следующим образом:
+
+----
+http://hostname.com/mywebapp/main.jsp?first_name=John&last_name=Smith
+----
+
+Но что произойдет, если кто-то использует эту ссылку:
+----
+http://hostname.com/mywebapp/main.jsp?first_name=<script>alert("XSS Test")</script>
+----
+
+=== Теперь ваша очередь!
+
+Попробуйте предотвратить этот вид XSS, экранируя параметры URL в файле JSP:

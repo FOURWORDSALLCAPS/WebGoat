@@ -1,0 +1,48 @@
+== Сохраненный XSS
+Одним из способов предотвращения сохраненного XSS является использование https://www.owasp.org/index.php/Category:OWASP_AntiSamy_Project[OWASP AntiSamy]. AntiSamy может создать «чистую» строку на основе настраиваемого файла политики.
+
+См. класс java ниже, который сохраняет комментарий в базе данных.
+
+[source,java]
+-------------------------------------------------------
+public class MyCommentDAO {
+
+    public static void addComment(int threadID, int userID, String newComment) {
+
+                String sql = "INSERT INTO COMMENTS(THREADID, USERID, COMMENT) VALUES(?,?,?);";
+
+                try {
+                        PreparedStatement stmt = connection.prepareStatement(sql);
+
+                        stmt.setInt(1, threadID);
+                        stmt.setInt(2, userID);
+                        stmt.setString(3, newComment);
+
+                        stmt.executeUpdate();
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                }
+        }
+}
+-------------------------------------------------------
+
+А вот класс Java, который использует функцию addComment
+
+[source,java]
+-------------------------------------------------------
+import org.owasp.validator.html.*;
+import MyCommentDAO;
+
+public class AntiSamyController {
+    ...
+    public void saveNewComment(int threadID, int userID, String newComment){
+        MyCommentDAO.addComment(threadID, userID, newComment);
+    }
+    ...
+}
+-------------------------------------------------------
+Как вы видите, файл Java сохраняет неотфильтрованный пользовательский ввод в базу данных.
+Теперь весь вредоносный код хранится в вашей базе данных.
+
+== Теперь ваша очередь!
+Попробуйте предотвратить этот вид XSS, создав чистую строку внутри функции saveNewComment(). Используйте "antisamy-slashdot.xml" в качестве файла политики для этого примера:

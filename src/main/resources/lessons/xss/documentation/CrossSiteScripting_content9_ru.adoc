@@ -1,0 +1,46 @@
+== Ресурсы защиты от XSS
+
+=== Java OWASP Encoder
+Не беспокойтесь о статусе инкубатора этого проекта. Используйте его, если вы делаете веб-приложения Java и защищаетесь от XSS. Используйте это
+ссылка: https://www.owasp.org/index.php/OWASP_Java_Encoder_Project
+
+=== Памятка по общей профилактике XSS
+ссылка: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
+
+=== Памятка по профилактике DOM XSS
+ссылка: https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html
+
+=== Обход фильтра XSS
+Хорошо знать своего врага ...
+ссылка https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+
+=== Особенности фреймворка Javascript
+
+Кодирование в клиенте может быть сложным. Вот несколько ресурсов, которые помогут в этом. Если вы не видите свой фреймворк ниже (например, Ember, React, ???) и хотите внести свой вклад или предложить что-то,
+зайдите на https://github.com/WebGoat/WebGoat и отправьте сообщение о проблеме (желательно с рекомендациями/ссылками) или сделайте форк и отправьте запрос на извлечение.
+
+==== jQuery
+будьте осторожны, если используете что-то вроде:
+
+_$selector.html(userInputHere)_,
+
+вы в опасности. Если вы хотите использовать это, убедитесь, что вы делаете что-то вроде:
+
+_$selector.html(someEncodeHtmlMethod(userInputHere))_
+
+ИЛИ
+
+_$selector.*text*(someEncodeHtmlMethod(userInputHere))_
+
+Если вам нужен только текст того, что выводит пользователь (http://stackoverflow.com/questions/9735045/is-jquery-text-method-xss-safe#9735118)
+
+==== Backbone.js
+(Один символ может иметь такое значение)
+
+http://underscorejs.org/#template
+
+https://nvisium.com/blog/2015/05/21/dont-break-your-backbone-xss-mitigation.html
+
+==== Angular
+Angular стремился избежать по умолчанию, но язык выражений доказал, что имеет 'sandbox' escapes. Лучше всего проверить
+подробности используемой вами версии и проконсультироваться, начиная отсюда: https://docs.angularjs.org/guide/security
