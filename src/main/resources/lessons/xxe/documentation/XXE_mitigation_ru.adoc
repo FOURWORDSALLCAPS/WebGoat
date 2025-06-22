@@ -1,0 +1,24 @@
+== Смягчение XXE
+
+Чтобы защититься от атак XXE, вам нужно убедиться, что вы проверяете входные данные, полученные от ненадежного клиента. В мире Java вы также можете указать своему парсеру полностью игнорировать DTD, например:
+
+[source]
+----
+XMLInputFactory xif = XMLInputFactory.newFactory();
+xif.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+----
+
+Если вы не можете полностью отключить поддержку DTD, вы также можете указать XML-анализатору игнорировать внешние сущности, например:
+
+[source]
+----
+XMLInputFactory xif = XMLInputFactory.newFactory();
+xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+xif.setProperty(XMLInputFactory.SUPPORT_DTD, true);
+----
+
+Для получения дополнительной информации о конфигурации см. https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html[Лист профилактики XXE]
+
+=== Проверка
+
+Реализуйте надлежащую проверку для Content-type и заголовка Accept, не полагайтесь просто на фреймворк для обработки входящего запроса. Если клиент указывает надлежащий заголовок Accept, верните `406/Not Acceptable.

@@ -1,0 +1,75 @@
+=== Найдите XXE с помощью обзора кода
+
+Теперь мы знаем, как работает инъекция, давайте рассмотрим, почему это может произойти. В приложениях Java конфигурация библиотеки XML по умолчанию не защищена, и вам придется изменить настройки. Предположим, вы нашли следующий фрагмент кода во время обзора кода:
+
+[source, java]
+----
+public XmlMapper xmlMapper() {
+  return new XmlMapper(XMLInputFactory.newInstance()) // <1>
+}
+----
+
+Просматривая заметки о выпуске библиотеки Jackson, вы читаете:
+[Цитата, Jackson 2.7.8 (26-сен-2016)]
+211: Отключите ``SUPPORT_DTD`` для ``XMLInputFactory``, если явно не переопределено
+
+==== Вопрос: уязвим ли парсер?
+
+Этот фрагмент кода определяет новый `XmlMapper` (`ObjectMapper`), который является популярным фреймворком для чтения и записи xml и json. Если мы проследим код на один уровень глубже, то обнаружим:
+
+[source, java]
+----
+/**
+ * @since 2.4
+ */
+public XmlMapper(XMLInputFactory inputF) {  // <1>
+  this(new XmlFactory(inputF)); //<2>
+}
+----
+<1> Это «конструктор», который мы вызвали из листинга выше (1)
+<2> Вызов другого «конструктора» и инициализация нового экземпляра `XmlFactory`
+
+Давайте посмотрим на исходный код `XMLFactory`
+
+[source, java]
+----
+public XmlFactory(XMLInputFactory xmlIn) { // <1>
+  this(xmlIn, null);}// <2>
+
+protected XmlFactory(XMLInputFactory xmlIn, XMLOutputFactory xmlOut, ...){ // <3>
+  if (xmlIn == null) { //<4>
+    xmlIn = XMLInputFactory.newInstance();
+    // согласно [dataformat-xml#190], отключить расширение внешней сущности по умолчанию
+    xmlIn.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE); // <5>
+    // и то же самое с [dataformat-xml#211], SUPPORT_DTD
+    xmlIn.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);// <6>
+  }
+}
+----
+<1> Это определение «конструктора» нового экземпляра, созданного в 3
+<2> Вызов другого «конструктора», определенного в 3
+
+В 4 мы знаем, что `if (xmlIn == null)` не будет истинным, потому что, если мы посмотрим на наше объявление в верхней части, мы создали наш собственный экземпляр `XMLInputFactory.newInstance()`, который не является `null`. Это означает, что у нас есть XML-анализатор, который по умолчанию **не** защищен от внедрения XXE. Интересная часть в 5 и 6 — это дополнительная защита, вложенная в оператор if.
+
+Если мы посмотрим на фреймворк Spring Boot, например, как они инициализируют тот же самый анализатор:
+
+[source, java]
+----
+public ObjectMapper create() {
+  return new XmlMapper(xmlInputFactory()); // <1>
+}
+
+private static XMLInputFactory xmlInputFactory() {
+  XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+  inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+  inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+  return inputFactory;
+}
+----
+<1> Вызов метода, который безопасно инициализирует парсер
+
+Как вы можете видеть, явно определяется ``XMLInputFactory`` через закрытый метод ``xmlInputFactory()``, который фактически устанавливает те же свойства парсеру, что и в предыдущем листинге.
+
+Как вы можете видеть, не так-то просто узнать, защищен ли парсер от инъекции, вам действительно нужно глубоко изучить код и библиотеку, чтобы узнать, каковы настройки парсера.
+
+Взгляните на https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html[лист предотвращения XXE], чтобы узнать больше о способах защиты вашего парсера.

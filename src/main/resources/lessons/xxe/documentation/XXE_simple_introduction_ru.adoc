@@ -1,0 +1,60 @@
+=== Пример XXE
+
+Давайте рассмотрим пример внедрения XXE, в предыдущем разделе мы увидели, что сущности XML можно использовать следующим образом:
+
+[source, xml]
+----
+<?xml version="1.0" standalone="yes" ?>
+<!DOCTYPE author [
+  <!ELEMENT author (#PCDATA)>
+  <!ENTITY js "Jo Smith">
+]>
+<author>&js;</author>
+----
+
+=== Внешняя декларация DTD
+
+Определение этих сущностей также позволяет определить другой DTD во внешнем файле, например:
+
+[source, xml]
+----
+<?xml version="1.0"?>
+<!DOCTYPE note SYSTEM "email.dtd">
+<email>
+  <to>webgoat@webgoat.org</to>
+  <from>webwolf@webwolf.org</from>
+  <subject>Ваше приложение отличное, но есть недостатки</subject>
+  <body>Привет, ваше приложение содержит несколько SQL-инъекций.</body>
+</email>
+----
+
+А `email.dtd` можно определить следующим образом:
+
+[source, dtd]
+----
+<!ELEMENT email (to,from,title,body)>
+<!ELEMENT to (#PCDATA)>
+<!ELEMENT from (#PCDATA)>
+<!ELEMENT subject (#PCDATA)>
+<!ELEMENT body (#PCDATA)>
+----
+
+=== XXE
+
+Если анализатор XML настроен на разрешение внешних DTD или сущностей, мы можем изменить следующий фрагмент XML следующим образом:
+
+[source, xml]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE author [
+  <!ENTITY js SYSTEM "file:///etc/passwd">
+]>
+<author>&js;</author>
+----
+
+Что происходит теперь? Мы определили включение из локальной файловой системы, XML-парсер загрузит файл и добавит содержимое везде, где есть ссылка на сущность. Предположим, что сообщение XML возвращается пользователю, сообщение будет:
+
+[role="lesson-image"]
+image::images/etc_password.png[Password]
+
+NOTE: Дополнительное определение типа документа (DOCTYPE) — это то, что вы всегда можете добавить в XML-документ, и если настройки парсера позволяют обрабатывать внешние сущности, то вы находитесь на хорошем старте для поиска внедрения XXE.

