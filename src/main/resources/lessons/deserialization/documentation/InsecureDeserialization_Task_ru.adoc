@@ -1,0 +1,8 @@
+=== Давайте попробуем
+Следующее поле ввода получает сериализованный объект (строку) и десериализует его.
+
+```
+rO0ABXQAVklmIHlvdSBkZXNlcmlhbGl6ZSBtZSBkb3duLCBJIHNoYWxsIGJlY29tZSBtb3JlIHBvd2VyZnVsIHRoYW4geW91IGNhbiBwb3NzaWJseSBpbWFnaW5l
+```
+
+Попробуйте изменить этот сериализованный объект, чтобы задержать ответ страницы ровно на 5 секунд.
