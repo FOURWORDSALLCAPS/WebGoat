@@ -1,0 +1,13 @@
+== Некоторые примеры риска OSS
+
+=== Commons Collections
+В ноябре 2015 года последнему релизу компонента Apache Commons Collections исполнилось 8 лет. Commons Collections считался надежным и стабильным компонентом. Исследователь нашел способ использовать проблему десериализации в Commons Collections, что привело к удаленному выполнению кода. На следующий день... *все, кто использовал Commons Collections, были в панике*.
+
+Ссылка: http://www.pcworld.com/article/3004633/business-security/thousands-of-java-applications-vulnerable-to-nine-month-old-remote-code-execution-exploit.html [Тысячи приложений Java уязвимы для эксплойта удаленного выполнения кода девятимесячной давности]
+
+=== Dinis Cruz и Alvaro Munoz эксплойт XStream
+XStream, относительно распространенная библиотека анализа XML и JSON, имеет отвратительное маленькое удаленное выполнение кода. +
+Ссылка: https://diniscruz.blogspot.com/2013/12/xstream-remote-code-execution-exploit.html[Блог Dinis Cruz] +
+https://github.com/pwntester/XStreamPOC[pwntester/XStreamPOC]
+
+Возможно, вам стоит прочитать статью(и) перед тем, как пробовать этот урок. Давайте посмотрим, сможете ли вы понять, как использовать это в WebGoat.
