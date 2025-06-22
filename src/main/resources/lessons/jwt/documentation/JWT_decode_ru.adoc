@@ -1,0 +1,11 @@
+== Декодирование токена JWT
+
+Давайте попробуем декодировать токен JWT, для этого можно использовать функционал webWolfLink:JWT[target=jwt] внутри WebWolf.
+Дан следующий токен:
+
+[source]
+----
+eyJhbGciOiJIUzI1NiJ9.ew0KICAiYXV0aG9yaXRpZXMiIDogWyAiUk9MRV9BRE1JTiIsICJST0xFX1VTRVIiIF0sDQogICJjbGllbnRfaWQiIDogIm15LWNsaWVudC13aXRoLXNlY3JldCIsDQogICJleHAiIDogMTYwNzA5OTYwOCwNCiAgImp0aSIgOiAiOWJjOTJhNDQtMGIxYS00YzVlLWJlNzAtZGE1MjA3NWI5YTg0IiwNCiAgInNjb3BlIiA6IFsgInJlYWQiLCAid3JpdGUiIF0sDQogICJ1c2VyX25hbWUiIDogInVzZXIiDQp9.9lYaULTuoIDJ86-zKDSntJQyHPpJ2mZAbnWRfel99iI
+----
+
+Скопируйте и вставьте следующий токен и расшифруйте его. Можете ли вы найти пользователя внутри токена?

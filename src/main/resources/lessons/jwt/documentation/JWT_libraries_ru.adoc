@@ -1,0 +1,67 @@
+== Библиотеки JWT
+
+В экосистеме Java доступно несколько библиотек JWT. Давайте рассмотрим одну из них:
+
+Содержимое нашего токена:
+
+[source]
+----
+header:
+
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+claims:
+
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}
+----
+
+[source]
+----
+var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.NFvYpuwbF6YWbPyaNAGEPw9wbhiQSovvSrD89B8K7Ng";
+
+Jwts.parser().setSigningKey("test").parseClaimsJws(token);
+----
+
+Будет работать!
+
+Давайте изменим заголовок на `{"alg":"none","typ":"JWT"}`
+Использование того же источника, что и выше, дает:
+
+[source]
+----
+var token = " eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.NFvYpuwbF6YWbPyaNAGEPw9wbhiQSovvSrD89B8K7Ng";
+
+Jwts.parser().setSigningKey("test").parseClaimsJws(token);
+----
+
+Приведет к:
+
+[souce]
+----
+io.jsonwebtoken.MalformedJwtException: Строка JWT имеет digest/signature, но заголовок не ссылается на действительный алгоритм подписи.
+----
+
+Полное удаление подписи (оставив последний `.`)
+
+[source]
+----
+var token = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.";
+
+Jwts.parser().setSigningKey("test").parseClaimsJws(token);
+----
+
+Приведет к:
+
+[source]
+----
+io.jsonwebtoken.UnsupportedJwtException: Неподписанные утверждения JWT не поддерживаются.
+----
+
+Именно этого и ожидаешь от библиотеки!
