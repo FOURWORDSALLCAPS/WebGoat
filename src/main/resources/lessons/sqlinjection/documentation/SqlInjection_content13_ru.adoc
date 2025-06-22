@@ -1,0 +1,44 @@
+== Order by clause
+
+Вопрос: Всегда ли подготовленный оператор предотвращает SQL-инъекцию?
+Ответ: Нет, не предотвращает
+
+Давайте рассмотрим следующий оператор:
+
+----
+"SELECT * FROM users ORDER BY " + sortColumName + ";"
+----
+
+Если взглянуть на спецификацию грамматики SQL, то определение выглядит следующим образом:
+
+----
+SELECT ...
+FROM tableList
+[WHERE Expression]
+[ORDER BY orderExpression [, ...]]
+
+orderExpression:
+{ columnNr | columnAlias | selectExpression }
+    [ASC | DESC]
+
+selectExpression:
+{ Expression | COUNT(*) | {
+    COUNT | MIN | MAX | SUM | AVG | SOME | EVERY |
+    VAR_POP | VAR_SAMP | STDDEV_POP | STDDEV_SAMP
+} ([ALL | DISTINCT][2]] Expression) } [[AS] label]
+
+Based on HSQLDB
+----
+
+Это означает, что `orderExpression` может быть `selectExpression`, которое также может быть функцией, поэтому, например, с помощью оператора `case` мы могли бы задать базе данных несколько вопросов, например:
+
+----
+SELECT * FROM users ORDER BY (CASE WHEN (TRUE) THEN lastname ELSE firstname END)
+----
+
+Таким образом, мы можем заменить любую булеву операцию в части `when(....)`. Оператор будет работать просто потому, что это допустимый запрос, независимо от того, используете ли вы подготовленный оператор или нет. Предложение order by может по определению содержать
+выражение.
+
+=== Смягчение
+
+Если вам нужно предоставить столбец сортировки в вашем веб-приложении, вам следует реализовать белый список для проверки значения оператора `order by`. Он всегда должен быть ограничен чем-то вроде «имя» или «фамилия».

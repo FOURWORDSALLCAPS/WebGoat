@@ -1,0 +1,26 @@
+== Неизменяемые запросы
+
+Это лучшая защита от SQL-инъекции. Они либо не содержат данных, которые можно интерпретировать, либо обрабатывают данные как единое целое, привязанное к столбцу без интерпретации.
+
+=== Статические запросы
+
+----
+String query = "SELECT * FROM products";
+----
+
+----
+String query = "SELECT * FROM users WHERE user = '" + session.getAttribute("UserID") + "'";
+----
+
+=== Параметризованные запросы
+
+----
+String query = "SELECT * FROM users WHERE last_name = ?";
+PreparedStatement statement = connection.prepareStatement(query);
+statement.setString(1, accountName);
+ResultSet results = statement.executeQuery();
+----
+
+=== Хранимые процедуры
+
+Только если хранимая процедура не генерирует динамический SQL
