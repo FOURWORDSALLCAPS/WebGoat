@@ -1,0 +1,21 @@
+=== Шаг 2: добавление нового класса урока
+
+Каждый урок может содержать несколько заданий, во-первых. Давайте определим класс урока в Java:
+
+[source]
+----
+@Component
+public class LessonTemplate extends Lesson {
+ @Override
+    public Category getDefaultCategory() {
+        return Category.GENERAL;
+    }
+
+    @Override
+    public String getTitle() {
+        return "lesson-template.title";
+    }
+}
+----
+
+Добавьте новый урок в новый пакет в `org.owasp.webgoat.lessons`.

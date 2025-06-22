@@ -1,0 +1,11 @@
+=== Еще больше контента
+
+Вы можете включить несколько файлов adoc на одну страницу, включив их в один и тот же `<div>`:
+
+[source]
+----
+<div class="lesson-page-wrapper">
+  <div class="adoc-content" th:replace="~{doc:lesson-template-video.adoc}"></div>
+  <div class="adoc-content" th:replace="~{doc:lesson-template-video-more.adoc}"></div>
+</div>
+----

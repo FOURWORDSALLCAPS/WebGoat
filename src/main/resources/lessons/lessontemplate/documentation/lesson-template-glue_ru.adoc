@@ -1,0 +1,33 @@
+=== Шаг 3: Напишите страницу Glue HTML
+
+Мы упоминали, что урок может состоять из нескольких заданий, WebGoat автоматически их подбирает, а пользовательский интерфейс отображает
+панель навигации поверх каждого урока. Страница с заданием изначально будет красной и станет
+зеленой, когда пользователь решит задание. Чтобы это сработало, нам нужно добавить:
+
+[source]
+----
+<html xmlns:th="http://www.thymeleaf.org">
+
+  <div class="lesson-page-wrapper">
+    <div class="adoc-content" th:replace="~{doc:lessons/lessontemplate/documentation/
+lesson-template-intro.adoc}"></div>
+  </div>
+  <div class="lesson-page-wrapper">
+    <div class="adoc-content" th:replace="~{doc:lessons/lessontemplate/documentation/
+lesson-template-content.adoc}"></div>
+  </div>
+  <div class="lesson-page-wrapper">
+    <div class="adoc-content" th:replace="~{doc:lessons/lessontemplate/documentation/
+lesson-template-lesson-class.adoc}"></div>
+  </div>
+</html>
+----
+
+Этот файл необходимо разместить в: `/src/main/resources/{lesson}/html/`. Имя файла должно быть таким же, как у класса Java, который мы создали на шаге 2.
+
+Фрагмент выше создаст три отдельные страницы (панель навигации) со страницами adoc, которые мы создали для создания этого урока.
+
+Вот и все, мы создаем базовый урок только с контентом. Чтобы все это работало, вам нужно сделать урок доступным в
+WebGoat.
+
+Вот и все. Запустите WebGoat, и ваш урок появится в меню.
